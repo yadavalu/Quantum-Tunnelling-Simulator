@@ -28,10 +28,57 @@ class SchroedingersEq:
         self.potential = barrier
         self.length = length
         self.mass = mass
+        # TODO: E
+        self.E = 1
 
     def solve(self):
-        # psi(x) ln|psi(x)| - psi(x) = m/(hbar^2) * (2*l^2*V(x) - E*x^2)
-        pass
+        self.psi = []
+
+        ## Area 1; V(x) = 0
+        # -hbar/2pi d^2(psi(x))/dx^2 = Epsi(x)
+        # d^2(psi(x))/dx^2 = 2mEpsi(x)/(-hbar^2)
+        # k = sqrt(2mE)/hbar
+        k = np.sqrt(2 * self.mass * self.E)/SchroedingersEq.hbar
+        # d^2(psi(x))/dx^2 = -k^2 psi(x)
+        # psi(x) = c1 sin(kx) + c2 cos(kx)
+        x = np.arange(-10, 10, 0.1)
+        # TODO: c1, c2
+        c1and31 = 1
+        c1and32 = 1
+        #self.psi1 = c1and31 * np.sin(k * x) + c1and32 * np.cos(k * x)
+        #yield self.psi1
+
+        ## TODO: 
+        # ValueError: operands could not be broadcast together with shapes (0,) (200,)
+        # Couldn't multiply k * x
+        self.psi += c1and31 * np.sin(k * x) + c1and32 * np.cos(k * x)
+
+        ## Area 2; V(x) = self.potential
+        # -hbar/2pi d^2(psi(x))/dx^2 + V(x) = Epsi(x)
+        # d^2(psi(x))/dx^2 = 2m(E - V(x))psi(x)/(-hbar^2)
+        # k = sqrt(2m(E - V(x)))/hbar
+        k = np.sqrt(2 * self.mass * (self.E - self.potential))/SchroedingersEq.hbar
+        # d^2(psi(x))/dx^2 = -k^2 psi(x)
+        # psi(x) = c1 sin(kx) + c2 cos(kx)
+        x = np.arrange(-10, 10, 0.1)
+        # TODO: c1, c2
+        c21 = 1
+        c22 = 1
+        #self.psi2 = c21 * np.sin(k * x) + c22 * np.cos(k * x)
+        #yield self.psi2
+
+        ## TODO: 
+        # ValueError: operands could not be broadcast together with shapes (0,) (200,)
+        # Couldn't multiply k * x
+        self.psi += c21 * np.sin(k * x) + c22 * np.cos(k * x)
+
+        ## Area 3; V(x) = 0
+        #yield self.psi1
+        self.psi += self.psi[0]
+
+        return self.psi
+
+
 
 
 class Potential(Frame):
@@ -65,19 +112,27 @@ class Potential(Frame):
     def _plot_barrier(self, *args):
         x = np.arange(-10, 10, 0.1)
         y = []
+        self.length = float(self.barrier_length.get())
+        self.height = float(self.barrier_height.get())
+
         for i in range(-100, 100, 1):
-            y.append(V(i/10, float(self.barrier_length.get()), float(self.barrier_height.get())))
+            y.append(V(i/10, self.length, self.height))
 
         potential, = plt.plot(x, y, label="Potential barrier")
         particle, = plt.plot(-10, float(self.energy.get()), "ro", label="Particle")
-        #plt.legend([potential, particle], ["Potential barrier", "Particle"])
         plt.legend(handler_map={potential: HandlerLine2D(numpoints=4)})
         plt.show()
+
+        self.psi = SchroedingersEq(y, self.length, float(self.mass.get())).solve()
+        print(self.psi)
+        plt.plot(x, self.psi[0])
+        plt.plot(x, self.psi[1])
+        plt.plot(x, self.psi[2])
 
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("480x200")
+    #root.geometry("480x200")
     root.title("Quantum tunnelling")
     Potential(root)
     root.mainloop()
