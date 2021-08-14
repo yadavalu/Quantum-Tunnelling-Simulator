@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.legend_handler import HandlerLine2D
 from tkinter import *
 
+import constants as c
+
 
 # Gaussian curve
 """
@@ -15,10 +17,6 @@ def V(x, location, barrier):
 
 
 class SchroedingersEq:
-
-    h = 6.62607004 * 10 ** -34
-    hbar = h/(2 * np.pi)
-
     """
     -hbar^2/2m d^2(psi)/dx^2 + V * psi = E * psi
     (H psi = E psi)
@@ -38,7 +36,7 @@ class SchroedingersEq:
         # -hbar/2pi d^2(psi(x))/dx^2 = Epsi(x)
         # d^2(psi(x))/dx^2 = 2mEpsi(x)/(-hbar^2)
         # k = sqrt(2mE)/hbar
-        k = np.sqrt(2 * self.mass * self.E)/SchroedingersEq.hbar
+        k = np.sqrt(2 * self.mass * self.E)/c.hbar
         # d^2(psi(x))/dx^2 = -k^2 psi(x)
         # psi(x) = c1 sin(kx) + c2 cos(kx)
         x = np.arange(-10, 10, 0.1)
@@ -57,7 +55,7 @@ class SchroedingersEq:
         # -hbar/2pi d^2(psi(x))/dx^2 + V(x) = Epsi(x)
         # d^2(psi(x))/dx^2 = 2m(E - V(x))psi(x)/(-hbar^2)
         # k = sqrt(2m(E - V(x)))/hbar
-        k = np.sqrt(2 * self.mass * (self.E - self.potential))/SchroedingersEq.hbar
+        k = np.sqrt(2 * self.mass * (self.E - self.potential))/c.hbar
         # d^2(psi(x))/dx^2 = -k^2 psi(x)
         # psi(x) = c1 sin(kx) + c2 cos(kx)
         x = np.arrange(-10, 10, 0.1)
