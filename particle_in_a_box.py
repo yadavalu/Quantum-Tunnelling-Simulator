@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.legend_handler import HandlerLine2D
 #from mpl_toolkits import mplot3d
+import cplot
 
 import constants as c
 
@@ -63,6 +64,11 @@ class SchroedingersEq:
         return [np.sqrt(2/self.a) * np.sin(self.n * c.pi * x/self.a), # * np.exp(-complex(0, 1) * (self.n * c.pi) ** 2 * c.hbar * t/(2*self.m*self.a**2)),
                 np.sqrt(2/self.a) * np.cos((self.n - 0.5) * c.pi * x/self.a)] # * np.exp(-complex(0, 1) * ((self.n - 0.5) * c.pi) ** 2 * c.hbar * t/(2*self.m*self.a**2))]
 
+    def solve_complex(self, x, t):
+        return [np.sqrt(2/self.a) * np.sin(self.n * c.pi * x/self.a) * np.exp(-complex(0, 1) * (self.n * c.pi) ** 2 * c.hbar * t/(2*self.m*self.a**2)),
+                np.sqrt(2/self.a) * np.cos((self.n - 0.5) * c.pi * x/self.a) * np.exp(-complex(0, 1) * ((self.n - 0.5) * c.pi) ** 2 * c.hbar * t/(2*self.m*self.a**2))]
+
+
 
 if __name__ == "__main__":
     a = float(input("Boundry of potential barrier (a): "))
@@ -76,7 +82,15 @@ if __name__ == "__main__":
     psi = eq.solve(xa)#, t)
     x = np.arange(a - 10, a + 10, 0.1)
     psi_full = eq.solve(x)
+
+    """
+    TODO
     
+    psi_x_t_full = lambda t: eq.solve_complex(x, t)[0]
+    cplot.plot(psi_x_t_full, (0, 10), (a - 10, a + 10), 400).show()
+    cplot.plot(psi_x_t_full, (0, 10), (a - 10, a + 10), 400).show()
+    """
+
     print(f"Energy of particle (E(-)): {eq.E[0]}")
     print(f"Energy of particle (E(+)): {eq.E[1]}")
     
